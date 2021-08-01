@@ -1,9 +1,9 @@
 <?php
-//$ignore = true;
+$ignore = true;
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-$pageName = "Register";
+
 require("../../site/lib.php");
 if($bop->logged_in())
 {
@@ -26,7 +26,6 @@ if($bop->logged_in())
 							<input type="password" class="width-80" id="pw1" placeholder="Password" style="margin-left: -5px;">
 							<input type="password" class="width-80" id="pw2" placeholder="Confirm Password">
 							<input type="email" class="width-80" id="email" placeholder="Your Email">
-							<div class="centered"><div class="g-recaptcha" data-sitekey="6Lcf9WsUAAAAAEeUozU-jTTER3uapYp5W1G2d2D3"></div></div>
 							<br>
 							<input type="submit" class="button success" value="Register">
 							<div style="centered">By signing up you agree to our <a href="/privacy/" style="color:#8771f7;">Privacy Policy</a></div>
@@ -37,16 +36,12 @@ if($bop->logged_in())
 		</div>
 	</div>
 </div>
-<script src='https://www.google.com/recaptcha/api.js'></script>
 <script>
 $(document).ready(function(){
 	$("#main-form").submit(function(e){
 		e.preventDefault();
 		$("#status").removeClass("hidden");
 		$("#submit").prop("disabled", true);
-
-		$.post()
-
 		$.post("submit.php", {username: $("#username").val(), pw1: $("#pw1").val(), pw2: $("#pw2").val(), email: $("#email").val()}, function(reply){
 			switch(reply)
 			{
@@ -72,18 +67,11 @@ $(document).ready(function(){
 					$("#status").html("The email you have entered is not valid.");
 					break;
 				case "err7":
-					$("#status").html("Invalid recaptcha.");
-					break;
-				case "err8":
-					$("#status").html("You can only have 3 accounts.");
-					break;
-				case "err9":
-					$("#status").html("You cannot sign up with a vpn.");
+					$("#status").html("you succ you habe 2 many accs");
 					break;
 			}
 		});
 	});
 });
 </script>
-
 <?php $bop->footer(); ?>
