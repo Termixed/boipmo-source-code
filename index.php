@@ -1,89 +1,130 @@
 <?php
-//$ignore = true;
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-$pageName = "Register";
-require("../../site/lib.php");
+require("/var/www/html/site/bopimo.php");
 if($bop->logged_in())
 {
-	die(header("location: /home"));
+  die(header("location: /home"));
 }
+$pageName = "Landing";
+/*
+require("/var/www/html/site/header.php");
+
+
+$players = $bop->query("SELECT COUNT(*) FROM users", [])->fetchColumn();
+$randPlayers = $bop->query("SELECT * FROM users WHERE hidden=0 AND lastseen > 0 ORDER BY RAND() LIMIT 0, 5", [], true);
+
+$items = $bop->query("SELECT COUNT(*) FROM items", [])->fetchColumn();
+$randItems = $bop->query("SELECT * FROM items WHERE verified=1 ORDER BY RAND() LIMIT 0, 5", [], true);
+
+$communities = $bop->query("SELECT COUNT(*) FROM community", [])->fetchColumn();
+$randCommunities = $bop->query("SELECT * FROM community WHERE pending=1 ORDER BY members DESC LIMIT 0, 5", [], true);
 ?>
-
+<meta charset="UTF-8">
+<meta property="og:site_name" content="bopimo.com">
+<meta property="og:image" content="https://www.bopimo.com/css/logo-small.png">
+<meta name="description" content="Welcome to Bopimo, the free community-based sandbox game. Sign up and play today!">
+<meta name="keywords" content="Bopimo, Bopimo thread, Bopimo Game">
+<meta name="author" content="Bopimo">
 <div class="content">
-	<div class="centered">
-		<div class="register-container">
-			<div class="banner danger hidden" id="status"><i class="fa fa-spinner fa-spin"></i> Loading</div>
-				<div class="card b">
-					<div class="top">
-						Register
-					</div>
-					<div class="body">
-						<form id="main-form">
-							<input class="width-80" id="username" placeholder="Username (3 - 20 (alphanum) Characters)">
-							<br>
-							<input type="password" class="width-80" id="pw1" placeholder="Password" style="margin-left: -5px;">
-							<input type="password" class="width-80" id="pw2" placeholder="Confirm Password">
-							<input type="email" class="width-80" id="email" placeholder="Your Email">
-							<div class="centered"><div class="g-recaptcha" data-sitekey="6Lcf9WsUAAAAAEeUozU-jTTER3uapYp5W1G2d2D3"></div></div>
-							<br>
-							<input type="submit" class="button success" value="Register">
-							<div style="centered">By signing up you agree to our <a href="/privacy/" style="color:#8771f7;">Privacy Policy</a></div>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+  <div class="page-title">Welcome to Bopimo, the free community-based sandbox.</div>
+  <div class="col-1-1">
+    <div class="card border">
+      <div class="col-2-12 centered" style="border-right:solid 2px #B5B5B5;height:200px;">
+        <br><br>
+        <div class="page-title">
+          <u>Users</u>
+        </div>
+        <span style="font-size:25px;"><?=$players?></span>
+      </div>
+      <?php
+      foreach($randPlayers as $user)
+      {
+        $avatar = $bop->avatar($user['id']);
+        ?>
+        <div class="col-2-12 centered" style="padding-right:0px;">
+          <a href="/profile/<?=$user['id']?>" style="color:black;">
+            <object data="https://storage.bopimo.com/avatars/<?=$avatar->cache?>.png"  class="image" type="image/png">
+              <img class="image" src="https://storage.bopimo.com/avatars/Wn8dCwts4fTE7NrhBmayXluHR.png">
+            </object>
+            <?=htmlentities($user['username'])?>
+          </a>
+        </div>
+        <?php
+      }
+      ?>
+    </div>
+  </div>
+
+  <div class="col-1-1">
+    <div class="card border">
+      <?php
+      foreach($randItems as $item)
+      {
+        ?>
+        <div class="col-2-12 centered" style="padding-right:0px;">
+          <a href="/item/<?=$item['id']?>" style="color:black;">
+            <object data="https://storage.bopimo.com/thumbnails/<?=$item['id']?>.png"  class="image" type="image/png">
+              <img class="image" src="https://storage.bopimo.com/thumbnails/declined.png">
+            </object>
+            <span style="text-overflow:ellipsis"><?=substr(htmlentities($item['name']), 0, 14)?></span>
+          </a>
+        </div>
+        <?php
+      }
+      ?>
+      <div class="col-2-12 centered" style="border-left:solid 2px #B5B5B5;height:200px;">
+        <br><br>
+        <div class="page-title">
+          <u>Items</u>
+        </div>
+        <span style="font-size:25px;"><?=$items?></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-1-1">
+    <div class="card border">
+      <div class="col-2-12 centered" style="border-right:solid 2px #B5B5B5;height:200px;">
+        <br><br>
+        <div class="page-title">
+          <u>Communities</u>
+        </div>
+        <span style="font-size:25px;"><?=$communities?></span>
+      </div>
+      <?php
+      foreach($randCommunities as $community)
+      {
+        ?>
+        <div class="col-2-12 centered" style="padding-right:0px;">
+          <a href="/community/view/<?=$community['id']?>" style="color:black;">
+            <object data="https://storage.bopimo.com/community/<?=$community['cache']?>.png"  class="image" type="image/png">
+              <img class="image" src="https://storage.bopimo.com/thumbnails/declined.png">
+            </object>
+            <span style="text-overflow:ellipsis"><?=substr(htmlentities($community['name']), 0, 14)?></span>
+          </a>
+        </div>
+        <?php
+      }
+      ?>
+    </div>
+  </div>
+  <div class="page-title">
+    What is Bopimo?
+  </div>
+  <div class="card border">
+    Bopimo is a free, community-based sandbox game that strives to allow as much freedom as possible. Right now, the website has:
+    <ul>
+      <li>User Registration, Login</li>
+      <li>Established Economy</li>
+      <li>Items</li>
+      <li>Community</li>
+      <li>Forums</li>
+      <li>Avatar Customization</li>
+      <li>Friend System</li>
+      <li>Fun</li>
+    </ul>
+    Join now for free!
+  </div>
 </div>
-<script src='https://www.google.com/recaptcha/api.js'></script>
-<script>
-$(document).ready(function(){
-	$("#main-form").submit(function(e){
-		e.preventDefault();
-		$("#status").removeClass("hidden");
-		$("#submit").prop("disabled", true);
-
-		$.post()
-
-		$.post("submit.php", {username: $("#username").val(), pw1: $("#pw1").val(), pw2: $("#pw2").val(), email: $("#email").val()}, function(reply){
-			switch(reply)
-			{
-				case "succ":
-					document.location = '/home';
-					break;
-				case "err1":
-					$("#status").html("All fields are required.");
-					break;
-				case "err2":
-					$("#status").html("The passwords you have entered do not match.");
-					break;
-				case "err3":
-					$("#status").html("Your username must be 3-20 characters long.");
-					break;
-				case "err4":
-					$("#status").html("Special characters are not allowed in a username.");
-					break;
-				case "err5":
-					$("#status").html("The username has been taken.");
-					break;
-				case "err6":
-					$("#status").html("The email you have entered is not valid.");
-					break;
-				case "err7":
-					$("#status").html("Invalid recaptcha.");
-					break;
-				case "err8":
-					$("#status").html("You can only have 3 accounts.");
-					break;
-				case "err9":
-					$("#status").html("You cannot sign up with a vpn.");
-					break;
-			}
-		});
-	});
-});
-</script>
-
-<?php $bop->footer(); ?>
+<?php */
+include("index3.php");
+?>
